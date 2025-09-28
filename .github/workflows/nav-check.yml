@@ -39,17 +39,17 @@ jobs:
           fi
       - name: Basic link check (relative docs)
         run: |
-          python - <<'PY'
-import re, pathlib, sys
-root = pathlib.Path('.').resolve()
-readme = (root/'README.md').read_text(encoding='utf-8')
-links = re.findall(r'\]\((docs/[a-zA-Z0-9_.\-/]+\.md)\)', readme)
-missing = []
-for l in links:
-    if not (root / l).exists():
-        missing.append(l)
-if missing:
-    print('Missing linked docs:', missing)
-    sys.exit(1)
-print('All linked docs exist.')
-PY
+      python - <<'PY'
+      import re, pathlib, sys
+      root = pathlib.Path('.').resolve()
+      readme = (root/'README.md').read_text(encoding='utf-8')
+      links = re.findall(r'\]\((docs/[a-zA-Z0-9_.\-/]+\.md)\)', readme)
+      missing = []
+      for l in links:
+        if not (root / l).exists():
+          missing.append(l)
+      if missing:
+        print('Missing linked docs:', missing)
+        sys.exit(1)
+      print('All linked docs exist.')
+      PY
