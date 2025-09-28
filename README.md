@@ -36,6 +36,7 @@ isaacsim-troubleshooting/
 | 安装 | 安装报错：某组件缺失 | [installation-error-1](docs/installation-error-1.md) |
 | 性能 | GUI 直接打开 USD 场景仿真卡顿（直接打开 vs 引用差异） | [gui-simulation-lag-direct-usd](docs/gui-simulation-lag-direct-usd.md) |
 | 物理 | 物理烹饪失败：m_processResult == OperationResult::SUCCESS is false | [physx-cooking-operationresult-false](docs/physx-cooking-operationresult-false.md) |
+| 物理 | 修改 Mesh 后出现大量 Hash Collision / Build storage validation failed 警告 | [physx-collider-hash-collision-warnings](docs/physx-collider-hash-collision-warnings.md) |
 | 资源 | 材质缺失：物体显示粉色 / 灰色 | [material-missing](docs/material-missing.md) |
 <!-- NAV_END -->
 
@@ -49,5 +50,6 @@ isaacsim-troubleshooting/
 
 ## 许可证
 本仓库内容默认采用 MIT License（可根据需要修改）。截图若包含第三方受版权保护内容，请在上下文中注明来源。
+
 
 
