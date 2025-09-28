@@ -32,6 +32,7 @@ isaacsim-troubleshooting/
 | 启动 | 启动阶段 PreStartup 崩溃 | [startup-crash-prestartup](docs/startup-crash-prestartup.md) |
 | 资源 | 材质缺失或粉色显示 | [material-missing](docs/material-missing.md) |
 | 多 GPU | 多 GPU 设备识别/调度异常 | [multi-gpu-issue](docs/multi-gpu-issue.md) |
+| 性能 | GUI 直接打开 USD 仿真卡顿 | [gui-simulation-lag-direct-usd](docs/gui-simulation-lag-direct-usd.md) |
 
 > 后续会按需增加分类（网络、ROS、路径规划、可视化、性能优化等）。
 
