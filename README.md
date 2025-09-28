@@ -31,6 +31,7 @@ isaacsim-troubleshooting/
 <!-- NAV_START -->
 | 分类 | 问题 | 链接 |
 |------|------|------|
+| GPU | GPU Device Lost / Vulkan ERROR_DEVICE_LOST 与重复 ICD JSON 冲突 | [gpu-vulkan-device-lost-duplicate-icd](docs/gpu-vulkan-device-lost-duplicate-icd.md) |
 | 启动 | 启动崩溃：PreStartup 阶段退出 | [startup-crash-prestartup](docs/startup-crash-prestartup.md) |
 | 多 GPU | 多 GPU 设备识别 / 调度异常 | [multi-gpu-issue](docs/multi-gpu-issue.md) |
 | 安装 | 安装报错：某组件缺失 | [installation-error-1](docs/installation-error-1.md) |
@@ -53,6 +54,7 @@ isaacsim-troubleshooting/
 
 ## 许可证
 本仓库内容默认采用 MIT License（可根据需要修改）。截图若包含第三方受版权保护内容，请在上下文中注明来源。
+
 
 
 
