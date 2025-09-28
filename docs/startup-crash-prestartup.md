@@ -1,3 +1,9 @@
+---
+title: 启动崩溃：PreStartup 阶段退出
+category: 启动
+order: 10
+---
+
 # 启动崩溃：PreStartup 阶段退出
 
 ## 问题现象

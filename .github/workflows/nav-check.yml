@@ -1,0 +1,55 @@
+name: Nav & Docs Consistency
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**/*.md'
+      - 'scripts/generate_nav.py'
+      - 'README.md'
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**/*.md'
+      - 'scripts/generate_nav.py'
+      - 'README.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyYAML
+      - name: Generate nav
+        run: |
+          python scripts/generate_nav.py
+      - name: Fail if README not updated
+        run: |
+          if [[ -n $(git status --porcelain README.md) ]]; then
+            echo 'README.md not up to date. Run scripts/generate_nav.py locally and commit.'
+            git diff README.md || true
+            exit 1
+          fi
+      - name: Basic link check (relative docs)
+        run: |
+          python - <<'PY'
+import re, pathlib, sys
+root = pathlib.Path('.').resolve()
+readme = (root/'README.md').read_text(encoding='utf-8')
+links = re.findall(r'\]\((docs/[a-zA-Z0-9_.\-/]+\.md)\)', readme)
+missing = []
+for l in links:
+    if not (root / l).exists():
+        missing.append(l)
+if missing:
+    print('Missing linked docs:', missing)
+    sys.exit(1)
+print('All linked docs exist.')
+PY

@@ -1,3 +1,10 @@
+---
+title: 问题标题（简短清晰）
+category: 模板
+draft: true
+order: 9999
+---
+
 # 问题标题（简短清晰）
 
 > 模板说明：将此文件复制重命名为新的问题文件，例如：`gpu-memory-fragmentation.md`

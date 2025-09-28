@@ -1,3 +1,9 @@
+---
+title: 多 GPU 设备识别 / 调度异常
+category: 多 GPU
+order: 10
+---
+
 # 多 GPU 设备识别 / 调度异常
 
 ## 问题现象

@@ -26,13 +26,17 @@ isaacsim-troubleshooting/
 - 新增问题时可以复制模板：`docs/problem-template.md`。
 
 ## 快速导航
+以下目录由脚本 `scripts/generate_nav.py` 自动生成，请勿手动编辑表格内容。
+
+<!-- NAV_START -->
 | 分类 | 问题 | 链接 |
 |------|------|------|
+| 启动 | 启动崩溃：PreStartup 阶段退出 | [startup-crash-prestartup](docs/startup-crash-prestartup.md) |
+| 多 GPU | 多 GPU 设备识别 / 调度异常 | [multi-gpu-issue](docs/multi-gpu-issue.md) |
 | 安装 | 安装报错：某组件缺失 | [installation-error-1](docs/installation-error-1.md) |
-| 启动 | 启动阶段 PreStartup 崩溃 | [startup-crash-prestartup](docs/startup-crash-prestartup.md) |
-| 资源 | 材质缺失或粉色显示 | [material-missing](docs/material-missing.md) |
-| 多 GPU | 多 GPU 设备识别/调度异常 | [multi-gpu-issue](docs/multi-gpu-issue.md) |
-| 性能 | GUI 直接打开 USD 仿真卡顿 | [gui-simulation-lag-direct-usd](docs/gui-simulation-lag-direct-usd.md) |
+| 性能 | GUI 直接打开 USD 场景仿真卡顿（直接打开 vs 引用差异） | [gui-simulation-lag-direct-usd](docs/gui-simulation-lag-direct-usd.md) |
+| 资源 | 材质缺失：物体显示粉色 / 灰色 | [material-missing](docs/material-missing.md) |
+<!-- NAV_END -->
 
 > 后续会按需增加分类（网络、ROS、路径规划、可视化、性能优化等）。
 
@@ -44,3 +48,4 @@ isaacsim-troubleshooting/
 
 ## 许可证
 本仓库内容默认采用 MIT License（可根据需要修改）。截图若包含第三方受版权保护内容，请在上下文中注明来源。
+
