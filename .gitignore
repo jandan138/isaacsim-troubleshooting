@@ -1,0 +1,20 @@
+# Logs
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup
+*.bak
+*.tmp
+
+# Images cache (none yet, keep actual screenshots)
