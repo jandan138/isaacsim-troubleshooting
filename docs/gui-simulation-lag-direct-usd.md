@@ -28,6 +28,74 @@ order: 10
    - 可能触发额外的延迟或重复重建（Profiler 中可见 step / sync 时间过长）。
 4. 通过“新建空场景 + 引用/载荷原始 USD”方式，空场景层（root layer）仍保留 Isaac Sim 初始化逻辑与默认 physicsScene，因此仿真表现恢复正常。
 
+### 初学者友好：缺少 physicsScene 时到底发生了什么？
+下面用更“白话”的方式拆解第 3 点：
+
+1. 什么是 Stage？
+    - 可以把 Stage 理解为“当前打开的工程时间轴 + 资源组合”。它由一个根 Layer（文件）和一堆可能被 Reference / Payload / Sublayer 进来的其它 USD 组成。
+2. 什么是 physicsScene？
+    - 一个特殊的 Prim（通常路径 `/World/physicsScene`）。它告诉物理引擎：
+      - 使用什么重力向量 (gravity)
+      - 每秒多少个“时间刻”（timeCodesPerSecond） & 每个物理步长多大（deltaTime）
+      - 是否启用 GPU 求解
+      - 迭代次数（position / velocity iterations）
+      - 稳定性/性能折中参数（substeps 等）
+    - 没有它，Isaac Sim 内部“物理调度器”缺少显式配置，只能套用默认兜底值。
+3. 默认兜底 (fallback) 是什么感觉？
+    - 类似“你没给我配置，我就用一个保守的模板跑”，这个模板可能：
+      - 物理步长 = 1/60（或内部固定值），但你的场景资产（例如关节 / 刚体）期望别的频率。
+      - 求解迭代较少 → 刚体稳定下来需要更多帧。
+      - 没有明确 substeps → 高速/轻量物体容易穿透，需要额外补偿（重新同步 / 约束修正）。
+    - 这些“小摩擦”叠加，就表现成“帧率看着还行，仿真节奏却卡顿 / 滞后”。
+4. 为什么会出现“内部等待 / 步进不同步”？
+    - 时间轴（Timeline）推进一帧，需要：渲染层 + 物理层 + 其它扩展（传感器、关节驱动、脚本）都各自执行。
+    - 缺 physicsScene 时，物理模块初始同步阶段更慢，它可能：
+      - 先用默认参数初始化一次；
+      - 发现有新 Rigid Body / Joint 加载（因为你的大场景还在陆续解析）→ 触发部分缓存重构；
+      - 在同一帧里做多次“延迟补齐”操作。
+    - 结果：渲染往前推进，但物理“真正有效步”更少，主观感受：场景像被“拖住”。
+5. Profiler 里为什么会看到 step/sync 时间长？
+    - 典型表现：`StepPhysics` / `Simulation` / `SyncBodies` / `ArticulationWarmStart` 占时偏大且抖动明显。
+    - 有时你会看到“锯齿”——几帧很快，接一帧突然 spike（内部在重建岛屿/缓存或重新分配内存）。
+6. 与“引用进空白场景”有何差别？
+    - 创建空白场景时，引导脚本会：
+      - 立即生成一个 physicsScene 并写入合理默认（不是兜底，而是“官方初始化”）。
+      - 初始化顺序：Physics → Stage 资源挂载 → 其它扩展。
+    - 所以后续再通过 Reference 引入一个大场景时，物理系统已经“稳定就绪”，减少了重复初始化与缓存抖动。
+7. 这是不是“Bug”？
+    - 更接近“内容生产流程与引擎假设不匹配”。官方假设：最终需要仿真时，Stage 中应存在 physicsScene。
+    - 因此更推荐“包装一层”或“显式添加 physicsScene”。
+8. 会不会影响渲染帧率数字？
+    - 不一定。渲染 FPS 可能仍显示 60+，但物理真实推进（有效模拟步）较少 → 逻辑显得慢。
+    - 可以在脚本里对比 `Get Physics Time` 与 `Wall Clock` 的差距确认。
+9. 如何确认当前有没有 physicsScene？
+    - Stage 面板展开 `/World` 看有没有一个小图标为“Physics Scene”的节点。
+    - 或用 Python：
+      ```python
+      from omni.usd import get_context
+      stage = get_context().get_stage()
+      print(bool(stage.GetPrimAtPath('/World/physicsScene')))
+      ```
+10. 如何验证 fallback 是否导致延迟？
+     - 打开 Profiler（Window > Utilities > Profiler）。
+     - Play 之前记录基线，然后：
+        1) 直接打开原始大场景 → 记录 200 帧 StepPhysics 平均耗时。
+        2) 新建空场景 + Reference 同一 USD → 记录同样指标。
+     - 对比曲线/均值/标准差，若方式 (1) 的抖动与峰值显著更高，即符合本文描述。
+11. 什么时候必须手动调参？
+     - 需要精确控制速度、稳定性或高关节复杂度（机械臂/复合关节），建议显式设置：
+        - solver position iterations （例如 16）
+        - solver velocity iterations （例如 4）
+        - substeps （快速高速交互：2~4）
+        - GPU dynamics = True（大规模接触 / 复杂场景）
+12. 初次优化优先级建议：
+     1) 确保存在 physicsScene。
+     2) 正确的 `metersPerUnit` 和 `upAxis`（避免缩放导致的数值不稳定）。
+     3) 合理的迭代与 substeps（避免过高导致纯性能瓶颈）。
+     4) 若仍卡顿，再看是否是资产脚本 / 传感器频率阻塞。
+
+> 总结一句：缺少 physicsScene 时不是“不能跑”，而是“以一个不透明的保守配置在跑”，这会让你误判性能瓶颈。显式创建并调参，是迈向可控与高效仿真的第一步。
+
 （尚未完全确认的可能因素）
 5. 缺失的 Stage 根层 `metersPerUnit` / `upAxis` 与仿真时间步配置交互，导致内部转换额外开销。
 6. Render 或 Layer Metadata 缺少 Isaac Sim 预期字段，引起初始化顺序差异。
