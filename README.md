@@ -43,6 +43,7 @@ isaacsim-troubleshooting/
 | 资源 | 材质缺失：物体显示粉色 / 灰色 | [material-missing](docs/material-missing.md) |
 | 资源 | MDL 包缺失导致大量 KooPbr / KooPbr_maps 编译报错 | [mdl-missing-packages-koopbr](docs/mdl-missing-packages-koopbr.md) |
 | 资源 | 间歇/版本差异的 DayMaterial.mdl 加载失败 (OmniUe4Translucent 关系解析) | [mdl-daymaterial-intermittent-load-error](docs/mdl-daymaterial-intermittent-load-error.md) |
+| 资源 | 修改 / 替换 MDL Shader 的 info:mdl:sourceAsset 与 subIdentifier | [mdl-replace-shader-source-asset](docs/mdl-replace-shader-source-asset.md) |
 <!-- NAV_END -->
 
 > 后续会按需增加分类（网络、ROS、路径规划、可视化、性能优化等）。
@@ -55,6 +56,7 @@ isaacsim-troubleshooting/
 
 ## 许可证
 本仓库内容默认采用 MIT License（可根据需要修改）。截图若包含第三方受版权保护内容，请在上下文中注明来源。
+
 
 
 
