@@ -1,3 +1,9 @@
+---
+title: Isaac Sim 多 GPU 崩溃问题分析报告
+category: GPU
+order: 20
+---
+
 # Isaac Sim 多 GPU 崩溃问题分析报告
 
 作者：朱子厚  
